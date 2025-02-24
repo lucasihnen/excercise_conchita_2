@@ -13,13 +13,12 @@ with open('logistic_regression.pkl', 'rb') as f:
 
 # Model dictionary for selection
 models = {
-    "Random Forest": random_forest,
-    "Logistic Regression": logistic_regression,
-    "SVM": svm
+    "🌲 Random Forest": random_forest,
+    "📈 Logistic Regression": logistic_regression,
+    "⚡ SVM": svm
 }
 
-# Streamlit cache for efficient processing
-@st.cache_data()
+# Define prediction function
 def prediction(model, Gender, Married, ApplicantIncome, LoanAmount, Credit_History):  
     # Pre-processing user input    
     Gender = 0 if Gender == "Male" else 1
@@ -43,20 +42,26 @@ def main():
     """
     st.markdown(html_temp, unsafe_allow_html=True)
 
-    # Dropdown to select the model
-    model_choice = st.selectbox("Choose a Model", list(models.keys()))
+    # Model selection using radio buttons with icons
+    st.subheader("🔍 Choose a Model for Prediction:")
+    model_choice = st.radio(
+        "Select the model you want to use:",
+        list(models.keys()),
+        index=0  # Default selection
+    )
 
     # User input fields
-    Gender = st.selectbox('Gender', ("Male", "Female"))
-    Married = st.selectbox('Marital Status', ("Unmarried", "Married"))
-    ApplicantIncome = st.number_input("Applicants monthly income", min_value=0.0, format="%.2f")
-    LoanAmount = st.number_input("Total loan amount", min_value=0.0, format="%.2f")
-    Credit_History = st.selectbox('Credit History', ("Unclear Debts", "No Unclear Debts"))
+    st.subheader("📝 Enter Loan Application Details")
+    Gender = st.radio('Gender:', ["Male", "Female"], horizontal=True)
+    Married = st.radio('Marital Status:', ["Unmarried", "Married"], horizontal=True)
+    ApplicantIncome = st.number_input("📊 Applicant's Monthly Income", min_value=0.0, format="%.2f")
+    LoanAmount = st.number_input("💰 Total Loan Amount", min_value=0.0, format="%.2f")
+    Credit_History = st.radio('📜 Credit History:', ["Unclear Debts", "No Unclear Debts"], horizontal=True)
 
     result = ""
 
     # When 'Predict' is clicked, make the prediction using the selected model
-    if st.button("Predict"):
+    if st.button("🚀 Predict Loan Approval"):
         selected_model = models[model_choice]  # Get the correct model
         result = prediction(selected_model, Gender, Married, ApplicantIncome, LoanAmount, Credit_History)
         st.success(f'Your loan is {result}')
